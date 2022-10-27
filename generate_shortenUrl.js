@@ -1,3 +1,4 @@
+//產生五碼亂數
 function generateShortenedUrl() {
   let collection = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
   collection = collection.split('')
