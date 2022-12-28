@@ -1,5 +1,8 @@
 <form action="/" method="POST">
   <div class="mb-3">
+    {{#if error}}
+    <p>{{error}}</p>
+    {{/if}}
     <label for="originalUrl" class="form-label">請輸入網址: </label>
     <div class="row justify-content-center">
       <div class="col-sm-7">

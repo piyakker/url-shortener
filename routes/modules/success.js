@@ -10,6 +10,9 @@ router.get('/:shorten_url', (req, res) => {
   return Url.findOne({ shortenUrl })
     .lean()
     .then(url => {
+      if (!url) {
+        return res.redirect('/fail')
+      }
       const fullUrl = req.protocol + "://" + req.get('host') + '/' + url.shortenUrl
       res.render('show', { url, fullUrl })
     })

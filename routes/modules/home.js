@@ -23,12 +23,19 @@ router.get('/favicon.ico', (req, res) => {
   return 'your favicon'
 })
 
+router.get('/fail', (req, res) => {
+  return res.render('fail')
+})
+
 //短網址連動回原網址
 router.get('/:shorten_url', (req, res) => {
   const shortenUrl = req.params.shorten_url
   return Url.findOne({ shortenUrl })
     .then(url => {
-      res.redirect(url.originalUrl)
+      if (!url) {
+        return res.redirect('/fail')
+      }
+      return res.redirect(url.originalUrl)
     })
 })
 
