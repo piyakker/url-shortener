@@ -5,9 +5,14 @@ const Schema = mongoose.Schema
 const urlschema = new Schema({
   originalUrl: {
     type: String,
-    required: true
+    required: true,
+    unique: true,
   },
-  shortenUrl: String
+  shortenUrl: {
+    type: String,
+    required: true,
+    unique: true,
+  }
 })
 
 //套用method
