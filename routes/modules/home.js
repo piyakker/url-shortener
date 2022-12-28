@@ -10,11 +10,16 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
   const originalUrl = req.body.originalUrl
+
+  if (!isValidUrl(originalUrl)) {
+    const error = '輸入的好像不是網址唷！'
+    return res.redirect(`/fail?error=${error}`)
+  }
   //先找有沒有一樣的 originalUrl, 如果沒有就 create 一個並且隨機配一組亂碼網址
   return Url.findOrCreate({ originalUrl }, { shortenUrl: generateShortenedUrl() })
     .then(url => {
       const shortenUrl = url.doc.shortenUrl
-      res.redirect(`/success/${shortenUrl}`)
+      return res.redirect(`/success/${shortenUrl}`)
     })
 })
 
@@ -24,7 +29,8 @@ router.get('/favicon.ico', (req, res) => {
 })
 
 router.get('/fail', (req, res) => {
-  return res.render('fail')
+  const { error } = req.query
+  return res.render('fail', { error })
 })
 
 //短網址連動回原網址
@@ -33,10 +39,16 @@ router.get('/:shorten_url', (req, res) => {
   return Url.findOne({ shortenUrl })
     .then(url => {
       if (!url) {
-        return res.redirect('/fail')
+        const error = '網址好像不太對耶。。。'
+        return res.redirect(`/fail?error=${error}`)
       }
       return res.redirect(url.originalUrl)
     })
 })
+
+function isValidUrl(url) {
+  const urlPattern = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+  return Boolean(urlPattern.test(url))
+}
 
 module.exports = router
