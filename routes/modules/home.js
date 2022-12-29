@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
   res.render('index')
 })
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const originalUrl = req.body.originalUrl
 
   if (!isValidUrl(originalUrl)) {
@@ -16,7 +16,7 @@ router.post('/', (req, res) => {
     return res.redirect(`/fail?error=${error}`)
   }
   //先找有沒有一樣的 originalUrl, 如果沒有就 create 一個並且隨機配一組亂碼網址
-  return Url.findOrCreate({ originalUrl }, { shortenUrl: generateShortenedUrl() })
+  return Url.findOrCreate({ originalUrl }, { shortenUrl: await generateShortenedUrl() })
     .then(url => {
       const shortenUrl = url.doc.shortenUrl
       return res.redirect(`/success/${shortenUrl}`)
